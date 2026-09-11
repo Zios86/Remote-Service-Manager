@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 2,
+  "groups": [
+    { "name": "01 — EAS4 и RussianPost EAS", "patterns": ["eas4-*", "*eas4*", "RussianPostEAS*", "eas4-plugin-launcher"] },
+    { "name": "02 — MARS", "patterns": ["mars-*", "MarsDiscovery", "MarsLauncher"] },
+    { "name": "03 — Базы данных", "patterns": ["MSSQL*", "SQLSERVER*", "SQLWriter", "*postgres*", "*oracle*", "*mysql*"] },
+    { "name": "04 — Безопасность и криптография", "patterns": ["*kaspersky*", "*crypto*", "*cryptopro*", "*tlsproxy*", "*defender*"] },
+    { "name": "05 — Печать", "patterns": ["Spooler", "*print*", "*printer*"] },
+    { "name": "06 — Мониторинг и диагностика", "patterns": ["Zabbix*", "*monitoring*", "*performancecounter*", "*logmetric*", "*watchdog*", "*uploader*"] },
+    { "name": "07 — Администрирование АРМ", "patterns": ["CmRcService", "*sccm*", "PCPost*", "*configuration manager*"] },
+    { "name": "08 — Сеть и удалённый доступ", "patterns": ["WinRM", "RpcSs", "DcomLaunch", "Dhcp", "Dnscache", "WlanSvc", "*network*"] },
+    { "name": "09 — Обновления и установка", "patterns": ["wuauserv", "BITS", "msiserver", "*update*", "*updater*", "*installer*"] }
+  ],
+  "protectedServices": ["RpcSs", "DcomLaunch", "WinRM", "EventLog", "PlugPlay", "Dhcp", "Dnscache", "LanmanWorkstation", "SamSs", "ProfSvc", "Schedule"]
+}

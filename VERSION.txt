@@ -1,0 +1,25 @@
+Remote Service Manager
+Version: 2.2.0
+Configuration schema: 2
+
+Core features:
+- Windows WinRM PSSession with reconnect;
+- Linux OpenSSH and systemd backend;
+- configurable service groups;
+- protected critical services;
+- snapshots and rollback;
+- startup type management;
+- service diagnostics;
+- operation audit log;
+- remote process monitoring.
+- current Windows domain account name for Linux SSH authentication.
+- transactional reconnect without stale service data;
+- responsive WinRM/SSH waits with operation timeouts;
+- PID identity verification and process operation audit;
+- interval-based Linux CPU metrics and extended systemd states;
+- strict SSH host-key checking and LocalAppData storage.
+- explicit Kerberos for Windows WinRM sessions;
+- hardened SSH execution without agent, X11 or port forwarding;
+- DNS-name validation for Kerberos server identity;
+- transport diagnostics in the operation log.
+- CSV formula-injection protection for exports and audit records.
