@@ -1698,6 +1698,7 @@ $ConnectButton.Add_Click({
     try {
         if ($script:TargetPlatform -eq 'Linux') {
             if ($null -ne $script:Session) { Remove-PSSession -Session $script:Session -ErrorAction SilentlyContinue; $script:Session=$null }
+            Write-Log "Проверка TCP-порта $($script:LinuxPort)..."
             $linuxInfo = Test-LinuxConnection
             $accountMode = if ($script:UseCurrentAccount) { 'текущая УЗ Windows' } else { 'указанная SSH-УЗ' }
             Write-Log "OpenSSH: соединение проверено; строгая проверка ключа узла; без перенаправления агента и портов."

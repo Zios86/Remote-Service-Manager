@@ -1,4 +1,4 @@
-﻿ПОДГОТОВКА LINUX ДЛЯ REMOTE SERVICE MANAGER 2.2.0
+﻿ПОДГОТОВКА LINUX ДЛЯ REMOTE SERVICE MANAGER 2.2.1
 
 Программа запускается на Windows и подключается к Linux по SSH.
 Она рассчитана на Linux с systemd, включая ALT Workstation K.
@@ -21,6 +21,13 @@
 
    Если команда не найдена, установите дополнительный компонент Windows
    «Клиент OpenSSH».
+
+   Проверьте доступность SSH-порта:
+
+   Test-NetConnection имя_или_ip -Port 22
+
+   Поле TcpTestSucceeded должно иметь значение True. Если указано False,
+   сначала проверьте VPN, маршрутизацию, межсетевой экран, порт и службу sshd.
 
 3. Создайте отдельный SSH-ключ на Windows:
 

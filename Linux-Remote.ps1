@@ -39,6 +39,46 @@ function ConvertTo-WindowsNativeArgument {
     return $builder.ToString()
 }
 
+function Test-LinuxTcpEndpoint {
+    param([ValidateRange(1,30)][int]$TimeoutSeconds = 5)
+
+    Assert-LinuxConnectionSettings
+    $client = New-Object System.Net.Sockets.TcpClient
+    $asyncResult = $null
+    try {
+        $asyncResult = $client.BeginConnect(
+            $script:ConnectedComputer,
+            $script:LinuxPort,
+            $null,
+            $null
+        )
+        if (-not $asyncResult.AsyncWaitHandle.WaitOne([TimeSpan]::FromSeconds($TimeoutSeconds))) {
+            throw "TCP-порт $($script:LinuxPort) не ответил за $TimeoutSeconds сек."
+        }
+        $client.EndConnect($asyncResult)
+    }
+    catch {
+        $reason = $_.Exception.Message
+        throw @"
+Не удалось установить TCP-соединение с Linux-компьютером.
+
+Адрес: $($script:ConnectedComputer)
+Порт SSH: $($script:LinuxPort)
+Причина: $reason
+
+Проверьте подключение к корпоративной сети/VPN, правильность адреса и порта,
+правила межсетевого экрана и работу sshd на Linux. Проверка в PowerShell:
+Test-NetConnection $($script:ConnectedComputer) -Port $($script:LinuxPort)
+"@
+    }
+    finally {
+        if ($null -ne $asyncResult -and $null -ne $asyncResult.AsyncWaitHandle) {
+            $asyncResult.AsyncWaitHandle.Close()
+        }
+        $client.Close()
+    }
+}
+
 function Invoke-LinuxSshCommand {
     param(
         [Parameter(Mandatory)][string]$Command,
@@ -193,6 +233,7 @@ function Get-LinuxServiceInventory {
 }
 
 function Test-LinuxConnection {
+    Test-LinuxTcpEndpoint -TimeoutSeconds 5
     $requiredCommands = 'systemctl base64 timeout ps awk getconf'
     $probe = 'for c in {0}; do command -v "$c" >/dev/null 2>&1 || {{ printf "RSM_MISSING|%s" "$c"; exit 3; }}; done; printf "RSM_LINUX_OK|"; id -un; printf "|"; systemctl --version | {{ IFS= read -r line; printf "%s" "$line"; }}' -f $requiredCommands
     $result = Invoke-LinuxSshCommand -Command $probe -AllowFailure
@@ -200,6 +241,12 @@ function Test-LinuxConnection {
     if ($result.ExitCode -ne 0 -or $text -notmatch 'RSM_LINUX_OK') {
         if ($text -match 'RSM_MISSING\|([^\s]+)') {
             throw "На Linux-компьютере не найдена обязательная команда: $($matches[1])."
+        }
+        if ($text -match '(?i)permission denied') {
+            throw "TCP-порт SSH доступен, но сервер отклонил аутентификацию. Проверьте имя пользователя, выбранный закрытый ключ, ssh-agent и наличие открытого ключа в authorized_keys. Ответ SSH: $text"
+        }
+        if ($text -match '(?i)host key verification failed|remote host identification has changed') {
+            throw "Не пройдена проверка ключа SSH-сервера. Сверьте отпечаток с администратором Linux и исправьте запись known_hosts. Ответ SSH: $text"
         }
         if ($text) { throw "Проверка Linux-компьютера завершилась ошибкой: $text" }
         throw "Проверка Linux-компьютера завершилась с кодом $($result.ExitCode)."

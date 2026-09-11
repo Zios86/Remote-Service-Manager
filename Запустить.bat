@@ -10,9 +10,9 @@ if errorlevel 1 (
     exit /b 1
 )
 
-call :verify_hash ".\Remote-Service-Manager.ps1" "f690bfba0b65c2ad7f0a2be816deaf585f743e563d205871a8cf0f6825ecf2a9"
+call :verify_hash ".\Remote-Service-Manager.ps1" "006b03bec7b8b6ec0d8b1171453704b5fc7bd83d41da088dd70b68dc41f3ce17"
 if errorlevel 1 goto integrity_error
-call :verify_hash ".\Linux-Remote.ps1" "3a8f56ed10da04950ca441c9e2fbd2360b5279bfa086265378b77e2353acb7a3"
+call :verify_hash ".\Linux-Remote.ps1" "fb7fab20401e3c608ed0e639ed6be616f8286ed62e2a4616a5fe265502582519"
 if errorlevel 1 goto integrity_error
 powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -STA -File ".\Remote-Service-Manager.ps1"
 set "APP_EXIT_CODE=%ERRORLEVEL%"

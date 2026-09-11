@@ -1,5 +1,5 @@
 Remote Service Manager
-Version: 2.2.0
+Version: 2.2.1
 Configuration schema: 2
 
 Core features:
@@ -23,3 +23,4 @@ Core features:
 - DNS-name validation for Kerberos server identity;
 - transport diagnostics in the operation log.
 - CSV formula-injection protection for exports and audit records.
+- TCP preflight and actionable SSH connection diagnostics.
